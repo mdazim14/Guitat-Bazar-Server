@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectID;
 
 
 const port = process.env.PORT || 5055
@@ -18,38 +18,31 @@ app.get('/', (req, res) => {
 })
 
 
-
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
-  const productsCollection = client.db("guitarBazar").collection("products");
-
+const productsCollection = client.db("guitarBazar").collection("products");
 
   app.get('/products', (req, res) => {
     productsCollection.find()
       .toArray((err, items) => {
         res.send(items)
-        console.log('from database', items);
+        // console.log('from database', items);
       })
   })
 
 
   app.post('/addData', (req, res) => {
     const newData = req.body;
-    console.log('adding new Data', newData);
     productsCollection.insertOne(newData)
       .then(result => {
-        console.log('inserted count', result.insertedCount)
         res.send(result.insertedCount > 0)
       })
   })
 
   app.delete('/delete/:id', (req, res) => {
-    const id = ObjectID(req.params.id)
-    console.log( "delete this", id);
-    productsCollection.findOneAndDelete({_Id: id})
+    productsCollection.deleteOne({_id: ObjectId(req.params.id)})
     .then(result => {
-      console.log(result)
+      result.send(result.deleteCount > 0);
     })
   })
 
