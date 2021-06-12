@@ -30,7 +30,6 @@ const productsCollection = client.db("guitarBazar").collection("products");
       })
   })
 
-
   app.post('/addData', (req, res) => {
     const newData = req.body;
     productsCollection.insertOne(newData)
