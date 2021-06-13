@@ -14,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-  res.send('Hello World with azim !')
+  res.send('Hello World with md azim !')
 })
 
 
@@ -53,6 +53,16 @@ const ordersCollection = client.db("guitarBazar").collection("orders");
       .then(result => {
         res.send(result.insertedCount > 0)
       })
+  })
+
+
+
+
+  app.get('/allOrder', (req, res)=>{
+    ordersCollection.find({email: req.query.email})
+    .toArray((err,orders)=>{
+        res.send(orders);
+    })
   })
 
 
