@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
 const productsCollection = client.db("guitarBazar").collection("products");
+const ordersCollection = client.db("guitarBazar").collection("orders");
 
   app.get('/products', (req, res) => {
     productsCollection.find()
@@ -43,6 +44,15 @@ const productsCollection = client.db("guitarBazar").collection("products");
     .then(result => {
       result.send(result.deleteCount > 0);
     })
+  })
+
+
+  app.post('/addOrder', (req, res) => {
+    const order = req.body;
+    ordersCollection.insertOne(order)
+      .then(result => {
+        res.send(result.insertedCount > 0)
+      })
   })
 
 
